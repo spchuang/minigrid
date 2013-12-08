@@ -1,0 +1,64 @@
+<html>
+<head>
+   <title>Mini Grid Example</title>
+   <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+   <script src="src/miniGrid.js" type="text/javascript"></script>	
+   <link rel="stylesheet" type="text/css" href="src/miniGrid.css" />
+   <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" />
+   <script>
+      $(document).ready(function(){
+         var data = [];
+         for(var i=0; i<50; i++){
+            data.push({
+               'id'    : i,
+               'name'  : 'test',
+               'price1': Math.floor((Math.random()*100)+1),
+               'price2': Math.floor((Math.random()*100)+1),
+               'price3': Math.floor((Math.random()*100)+1),
+               'note'  : 'this is random'       
+            });
+         }
+         function _test(col_val, data_row, col_name){
+            return col_val;
+         }
+         function _getTax(col_val,data_row, col_name){
+                  
+            return (data_row["price1"]+data_row["price2"]+data_row["price3"])*0.1;
+         }
+         function _getTotal(col_val,data_row, col_name){
+
+            return (data_row["price1"]+data_row["price2"]+data_row["price3"])*1.1;
+
+         }
+
+      
+         var table = $("#example").miniGrid({
+            gridName: "example",
+            colNames:['Id', 'Name','Item 1', 'Item 2', 'Item 3','Tax','Total','None'],
+            colModel:[
+               {name: 'id',     inData: true, hidden: true},
+               {name:'name',    inData: true , editable: true, width:10, formatter: _test},
+               {name:'price1',  inData: true , width:10, formatter: _test},
+               {name:'price2',  inData: true , width:10, formatter: _test},
+               {name:'price3',  inData: true , width:40, formatter: _test},
+               {name:'tax',     inData: false, width:5,  formatter: _getTax},
+               {name:'total',   inData: false, width:5,  formatter: _getTotal},
+               {name:'note',    inData: true , editable: true, formatter: _test},
+
+            ],
+            width: 800,
+            height: 300,
+            data: data,
+            sort_index: 'id'
+         });
+      });
+   </script>
+</head>
+<body>
+<h3>Mini Grid Demo</h3>
+
+<table id="example" class="table table-condensed" border="1">
+
+</table>
+</body>
+</html>

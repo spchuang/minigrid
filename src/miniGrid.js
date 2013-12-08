@@ -1,8 +1,5 @@
-//miniGrid - custom table library for MUSE
-//template taken from: https://github.com/jquery-boilerplate/jquery-boilerplate/blob/master/src/jquery.boilerplate.js
-
-// the semi-colon before function invocation is a safety net against concatenated
-// scripts and/or other plugins which may not be closed properly.
+//miniGrid
+//http://jsfiddle.net/zS7Ny/
 ;(function ( $, window, document, undefined ) {
 
   	// Set the default options 
@@ -14,6 +11,7 @@
 	        data    : {},
 		};
 	var modes = {"UNIVERSAL": 0, "ROW": 1 , "EDIT": 2};
+	var RENDER_ALL_COL = "all";
 	var currentMode;
 	var editable_cols;
 	var hidden_cols;
@@ -43,6 +41,7 @@
 	 	onOutsideClick: function(){},
 	 	onEdit: function(){},
 	 	onModeChange: function(mode){},
+	 	onDoneEdit: function(){},
       updateWarningAndErrorCount: function(warning_count, error_count){}
 	}
 
@@ -150,7 +149,6 @@
          });
 		},
 		editCell: function(rowid, colid, editState){
-			var start = new Date().getTime();
 	
 			var cell = $(table).find('#'+rowid + " td:nth-child("+(colid+1)+")");	
 
@@ -236,7 +234,6 @@
 			}
 			tstate.sel_rows 	= [rowid];
 			tstate.focus_row 	= rowid;
-			//var start = new Date().getTime();	
 
 			$(table).find('#'+rowid).addClass('ui-state-highlight').find(".cbox").prop('checked', true);
 
@@ -318,7 +315,7 @@
 				col_to_id_table[table_plugin.settings.colModel[i].name] = i;
 			}
 			//push the header first
-			$(table).append("<tbody><tr id='theader'>"+table_header+"</tr></tbody>");
+			$(table).find('tbody').append("<tr id='theader'>"+table_header+"</tr>");
 
          //render row (without cell content)
 			for(var i=0, data_length = data.length; i<data_length; i++){
@@ -326,7 +323,7 @@
 				var internal_data_row = {};
 				var row = $("<tr role='row' id='"+i+"' class='ui-widget-content ui-row-ltr'>"+
 							"<td role='gridcell' class='ui-state-default' style='text-align:center;width:20px;'>"+(i+1)+"</td>"+
-						    "<td role='gridcell' style='text-align:center;width:10px; '><input role='checkbox' type='checkbox' class='cbox'></td></tr>");
+						    "<td role='gridcell' style='text-align:center;width:10px; '><input role='checkbox' type='checkbox' class='cbox'></td></tr>");  
 				
 				//create an empty row first
 				for(var j=0, col_length = col_setting.length; j<col_length; j++){
@@ -348,13 +345,20 @@
          //Render Row Data
          var col_names = [];
          for(var c in col_to_id_table) col_names.push(c);
-         methods['renderRowData'](0,data.length, ["start","end","duration","data","position","alignment","warnings","errors"]);
+         methods['renderRowData'](0,data.length, RENDER_ALL_COL);
 
 		},
       //render
       renderRowData: function(start_row, end_row, col_names){
          var rowid = start_row;
+         if(col_names == RENDER_ALL_COL){
+            col_names = [];
+            for(key in col_to_id_table){
+               col_names.push(key);
+            }
+         }
          $("#"+table.id +" tr[role='row']").slice(start_row, end_row).each(function(key,r){
+            
 
             for(var i=0, l=col_names.length; i<l; i++){
                var col_name = col_names[i], id = col_to_id_table[col_name];
@@ -402,8 +406,11 @@
 			init: function () {
 				methods['changeMode'](modes.UNIVERSAL);
 				methods['init_var'](this.settings.data);
-            $(table).addClass('minigrid');
-            $(table).wrap("<div id='minigrid_wrap'></div>");
+            $(table).addClass('minigrid')
+                    .wrap("<div id='minigrid_wrap'></div>")
+                    .append("<tbody></tbody>")
+                    .find('tbody').css({width: this.settings.width, height: this.settings.height});
+            $("#minigrid_wrap").css({width: this.settings.width, height: this.settings.height});
 				methods['init_table']();	
 				methods['bindRowEvent']();
 				methods['bindClickOutsideEvent']();	
@@ -494,7 +501,7 @@
             //update row data
             var col_names = [];
             for(var c in col_to_id_table) col_names.push(c);
-            methods['renderRowData'](rowid,rowid+1, ["start","end","duration","data","position","alignment","warnings","errors"]);
+            methods['renderRowData'](rowid,rowid+1, RENDER_ALL_COL);
 
 		  		//pushed the select array
 		  		if(tstate.edit_row >= rowid){
