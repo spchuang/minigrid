@@ -1,0 +1,61 @@
+#minigrid_wrap{
+   overflow: auto;
+}
+table.minigrid{
+	background-color: white;
+	margin:0;
+	padding: 0;
+	tabindex:0;
+   width: 100%;
+   border-collapse: collapse;
+   left:0
+}
+.minigrid thead{
+	margin:0;
+	padding:0;
+	display:block;
+}
+.minigrid tbody{
+	margin:0;
+	padding:0;
+
+	display: table-row-group;
+	vertical-align: middle;
+	border-color: inherit;
+   overflow:auto;
+}
+.minigrid tr{
+	display: table-row;
+	vertical-align: inherit;
+}
+
+.minigrid tr:hover{
+	cursor:pointer;
+   background:#ccd232;
+}
+.minigrid td{
+	max-width: 320px;
+	border: 1px solid #e0e0e0;
+   -ms-word-break: break-all;
+   word-break: break-all;
+
+   /* Non standard for webkit */
+   word-break: break-word;
+	vertical-align: middle;
+
+	font-weight: normal;
+	white-space: pre;
+	padding: 3px 2px 3px 2px;
+}
+/*set column width*/
+.minigrid .editCell input{
+	width:98%;
+   padding:0;
+   margin: 0;
+}
+.minigrid .ui-state-highlight {
+	background: #D8D8D8;
+	border: none;
+
+}
+
