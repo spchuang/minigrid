@@ -42,7 +42,6 @@
 	 	onEdit: function(){},
 	 	onModeChange: function(mode){},
 	 	onDoneEdit: function(){},
-      updateWarningAndErrorCount: function(warning_count, error_count){}
 	}
 
 	//priate methods
@@ -145,7 +144,6 @@
                });
                tstate.sel_rows = [];
             }
-            console.log(tstate.sel_rows);
          });
 		},
 		editCell: function(rowid, colid, editState){
@@ -372,10 +370,6 @@
             rowid++;
          });
 
-         //update warning count and error count;
-         var w= methods['countFilter']("warnings", "true");
-         var e= methods['countFilter']("errors", "true");
-         binded_events['updateWarningAndErrorCount'](w,e);
 
       },
       countFilter: function(col_name, value){
@@ -418,10 +412,6 @@
 			},
 			setGridParam : function(param){
 				binded_events = $.extend( binded_events, param );
-            //update warning & error count in the beginning
-            var w= methods['countFilter']("warnings", "true");
-            var e= methods['countFilter']("errors", "true");
-            binded_events['updateWarningAndErrorCount'](w,e);
 			},
 
 			//reload/update grid data
